@@ -1,0 +1,48 @@
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    background-color: black;
+}
+
+.messages {
+    overflow-y: scroll;
+}
+
+.chatSection {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+}
+
+.message {
+    flex: 5;
+    background-color: black;
+}
+
+.inputAndButton {
+    flex: 1;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.messages {
+    height: 100%;
+
+    ul {
+        padding-left: 5px;
+    }
+
+    li {
+        margin-bottom: 10px;
+    }
+}
+
+.inputMessage {
+    width: 80%;
+    height: 20px;
+    border: none;
+    border-radius: 5px;
+}

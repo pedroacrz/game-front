@@ -1,0 +1,53 @@
+.rooms {
+    height: 300px;
+    background-color: blue;
+    padding: 5px;
+
+    overflow-y: scroll;
+
+    ul {
+        padding: 0;
+    }
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+        margin-bottom: 10px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .createRoom {
+        margin-top: 15px;
+        display: flex;
+
+        input {
+            width: auto;
+            height: 20px;
+            border-radius: 5px;
+            border: none;
+            outline-color: blue;
+            padding: 3px
+        }
+
+        button {
+            width: auto;
+            height: 27px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            margin-left: 5px;
+        }
+    }
+
+    .roomsList {
+        margin-top: 30px;
+    }
+
+
+}
