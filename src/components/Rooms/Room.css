@@ -109,6 +109,10 @@
         height: 176px;
         overflow-y: scroll;
         padding: 5px;
+
+        strong {
+            color: rgb(150, 55, 194);
+        }
     }
 
     .tab {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { socketContext } from '../../contexts/SocketContext'
 import './Room.css'
 
@@ -6,20 +6,16 @@ import './Room.css'
 
 function Rooms() {
 
-
-
-    const { playersActiveInRoom, rooms, createRoom, enterRoom, activeRoom } = useContext(socketContext)
+    const { playersActiveInRoom, rooms, createRoom, enterRoom } = useContext(socketContext)
     const [showCreateRoom, setShowCreateRoom] = useState(false)
     const [roomId, setRoomId] = useState("")
-    const [tab, setTab] = useState('players')
-
-
+    const [tab, _setTab] = useState('players')
 
     function Tab() {
         return (
             <div className='tab'>
-                <div onClick={() => { setTab('rooms') }}>Salas</div>
-                <div onClick={() => { setTab('players') }}>Jogadores</div>
+                {/* <div onClick={() => { setTab('rooms') }}>Salas</div>
+                <div onClick={() => { setTab('players') }}>Jogadores</div> */}
             </div>
         )
     }
@@ -29,12 +25,12 @@ function Rooms() {
             {tab == 'players' ?
                 <div className='rooms'>
                     <div className='header'>
-                        <h3>Jogadores</h3>
+                        <h3>Jogadores na sala</h3>
                     </div>
                     <ul className='playersList'>
                         {playersActiveInRoom.map((player, i: number) => {
                             return <li key={i}>
-                                <p>{player.nick} : {player.points}</p>
+                                <p>{player.nick} - <strong>Pontos: {player.points}</strong></p>
                             </li>
                         })}
                     </ul>
@@ -63,6 +59,7 @@ function Rooms() {
 
 
             }
+
         </>
 
     )

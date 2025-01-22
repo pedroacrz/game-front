@@ -1,0 +1,42 @@
+.login {
+    width: 400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(119, 12, 190);
+    height: 300px;
+    border-radius: 15px;
+
+    .title {
+        margin-top: 30px;
+    }
+
+    input {
+        width: 90%;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(30, 30, 39);
+        margin-bottom: 5px;
+
+        padding: 5px;
+        color: white;
+        font-size: 13px;
+        margin-top: 20px;
+    }
+
+    button {
+        width: 200px;
+        height: 30px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(30, 30, 39);
+        margin-bottom: 5px;
+
+        padding: 5px;
+        color: white;
+        font-size: 13px;
+        margin-top: 20px;
+    }
+}

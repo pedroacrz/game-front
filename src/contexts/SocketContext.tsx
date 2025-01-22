@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { socket } from '../socket.ts';
+import hitSound from '../assets/hs.mp3'
 
 export interface IMessage { message: string }
 
@@ -8,26 +9,41 @@ type IPlayersActiveInRoom = {
     points: number
 }
 
+type IGameState = {
+    targetPosition: {
+        x: number,
+        y: number
+    }
+}
+
 const socketContext = createContext<{
     messages: IMessage[],
-    sendMessage: (message: string) => void,
-    createRoom: (roomId: string) => void,
-    enterRoom: (roomId: string) => void,
     rooms: string[],
     isConnected: boolean,
     activeRoom: string;
     playersActiveInRoom: IPlayersActiveInRoom[],
     nickname: string;
+    game: IGameState,
+    sendMessage: (message: string) => void,
+    createRoom: (roomId: string) => void,
+    enterRoom: (roomId: string) => void,
+    setNickname: (nickName: string) => void,
+    updateNickname: (nickName: string) => void,
+    actionPlay: (rect: { x: number, y: number }) => void,
 }>({
     messages: [],
-    sendMessage: Function,
-    rooms: [],
-    createRoom: Function,
-    enterRoom: Function,
     isConnected: false,
     activeRoom: '',
     playersActiveInRoom: [],
-    nickname: ''
+    nickname: '',
+    rooms: [],
+    game: { targetPosition: { x: 0, y: 0 } },
+    sendMessage: () => { },
+    createRoom: () => { },
+    enterRoom: () => { },
+    setNickname: () => { },
+    updateNickname: () => { },
+    actionPlay: () => { },
 })
 
 function SocketContextProvider({ children }: { children: React.ReactNode }) {
@@ -39,12 +55,17 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
     const [activeRoom, setActiveRoom] = useState<string>('')
     const [playersActiveInRoom, setPlayersActiveInRoom] = useState<IPlayersActiveInRoom[]>([])
     const [nickname, setNickname] = useState('')
+    const [game, setGame] = useState<IGameState>({ targetPosition: { x: 0, y: 0 } })
+
+    const soundHit = new Audio(hitSound)
+
     useEffect(() => {
+
         function onConnect() {
             console.log("conectado com o backend");
             socket.emit("enterRoom", roomId)
             socket.emit("createRoom", roomId)
-            setActiveRoom(roomId)
+            setActiveRoom(roomId);
             setIsConnected(true);
         }
 
@@ -61,22 +82,18 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
             setMessages((prev) => [...prev, message])
         })
         socket.on("updatePlayers", msg => {
-            //console.log(msg)
             let msgOjb = Object.entries(msg)
-            // console.log(msgOjb);
             let playersObj: any[] = []
             msgOjb.forEach((obj: any) => {
-                console.log(obj);
                 playersObj.push(obj[1])
             })
-            console.log(playersObj);
             setPlayersActiveInRoom(playersObj)
+        })
 
-            // let players: IPlayersActiveInRoom[] = []
-            // players = msgOjb.map((player: IPlayersActiveInRoom, i: number) => {
-            //     return { nick: player.nick, points: player.points }
-            // })
-            // setPlayersActiveInRoom(players)
+        socket.on("gameState", (game) => {
+            console.log(game);
+
+            setGame({ targetPosition: { x: game.x, y: game.y } })
         })
 
         socket.on('updateRooms', (msg) => {
@@ -88,11 +105,23 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
             setRooms(rooms)
         })
 
+        socket.on("playMusic", (music) => {
+            switch (music) {
+                case 'hit':
+                    soundHit.currentTime = 0
+                    soundHit.volume = 0.02
+                    soundHit.play()
+                    break;
+            }
+        })
+
         return () => {
             socket.off('connect', onConnect);
             socket.off('disconnect', onDisconnect);
             socket.off('newMessage', () => { });
             socket.off('newUserInRoom', () => { });
+            socket.off('gameState', () => { });
+            socket.off('updateRooms', () => { });
         };
     }, []);
 
@@ -106,13 +135,23 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
     }
 
     const enterRoom = (roomId: string) => {
+        if (activeRoom === roomId) return;
         setMessages([])
         socket.emit("enterRoom", roomId)
         setActiveRoom(roomId)
     }
 
+    const updateNickname = (nickName: string) => {
+        socket.emit('updateNickname', nickName)
+        setNickname(nickName)
+    }
+
+    const actionPlay = (rect: { x: number, y: number }) => {
+        socket.emit("shot", rect)
+    }
+
     return (
-        <socketContext.Provider value={{ nickname, playersActiveInRoom, activeRoom, messages, sendMessage, rooms, createRoom, enterRoom, isConnected }}>
+        <socketContext.Provider value={{ actionPlay, game, updateNickname, setNickname, nickname, playersActiveInRoom, activeRoom, messages, sendMessage, rooms, createRoom, enterRoom, isConnected }}>
             {children}
         </socketContext.Provider>
     )

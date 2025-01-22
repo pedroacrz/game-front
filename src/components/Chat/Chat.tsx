@@ -19,7 +19,7 @@ function Chat() {
 
     return (
         <div className='chat'>
-            <h3>Chat <span>({activeRoom})</span></h3>
+            <h3>Chat <span>conectado em: ({activeRoom})</span></h3>
             <section className='chatSection'>
 
                 <div ref={messagesDiv} id="messages" className='messages'>
@@ -39,7 +39,6 @@ function Chat() {
                         placeholder='Escreva aqui...'
                         className='inputMessage'
                         onKeyDown={(e) => {
-                            console.log(e.key);
                             if (e.key === 'Enter') {
                                 sendMessageFunction()
                             }
@@ -47,6 +46,7 @@ function Chat() {
                 </div>
 
             </section>
+
         </div>
     )
 }
