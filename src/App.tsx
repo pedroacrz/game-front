@@ -10,10 +10,7 @@ function App() {
 
   return (
     <>
-
       <Header />
-
-
       <main>
         <Game />
         <aside>

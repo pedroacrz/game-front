@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import './Header.css';
+import { socketContext } from '../../contexts/SocketContext';
 
 function Header() {
+    const { isConnected } = useContext(socketContext)
     return (
         <header>
             <h1>AIM MAD</h1>
-            <p>Ping 0</p>
+            <p>{isConnected ? 'Você está online | ' : 'Você está offline | '} Ping 0</p>
         </header>
     )
 }

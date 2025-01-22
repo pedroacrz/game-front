@@ -1,5 +1,5 @@
 body {
-  background-color: black;
+  background-color: rgb(65, 33, 116);
   color: #ffffff;
   padding-left: 10;
   margin: 0;
@@ -26,12 +26,15 @@ p {
 
 main {
   margin: 0;
+  width: 700px;
+  margin: 0 auto;
   margin-top: 15px;
-  display: flex;
   justify-content: space-between;
 }
 
 aside {
-  width: 300px;
-  background-color: #ffffff;
+  width: 100%;
+  display: flex;
+  background-color: rgb(65, 33, 116);
+  gap: 7px;
 }

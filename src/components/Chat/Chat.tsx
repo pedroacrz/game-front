@@ -1,10 +1,10 @@
 import './Chat.css'
 import { socketContext } from '../../contexts/SocketContext'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 function Chat() {
 
-    const { messages, sendMessage } = useContext(socketContext)
+    const { messages, sendMessage, activeRoom } = useContext(socketContext)
     const [messageInInput, setMessageInInput] = useState<string>('')
     const messagesDiv = useRef<HTMLDivElement>(null)
 
@@ -14,14 +14,12 @@ function Chat() {
     }
 
     useEffect(() => {
-        console.log(messages);
         messagesDiv.current?.scrollTo(0, messagesDiv.current?.scrollHeight)
-
     }, [messages])
 
     return (
         <div className='chat'>
-            <h3>Chat</h3>
+            <h3>Chat <span>({activeRoom})</span></h3>
             <section className='chatSection'>
 
                 <div ref={messagesDiv} id="messages" className='messages'>
@@ -33,9 +31,21 @@ function Chat() {
                 </div>
 
                 <div className='inputAndButton'>
-                    <input value={messageInInput} onChange={e => setMessageInInput(e.target.value)} type="text" id="inputMessage" placeholder='Escreva aqui...' className='inputMessage' />
-                    <button onClick={() => sendMessageFunction()} className='buttonSendMessage'>{'>'}</button>
+                    <input
+                        value={messageInInput}
+                        onChange={e => setMessageInInput(e.target.value)}
+                        type="text"
+                        id="inputMessage"
+                        placeholder='Escreva aqui...'
+                        className='inputMessage'
+                        onKeyDown={(e) => {
+                            console.log(e.key);
+                            if (e.key === 'Enter') {
+                                sendMessageFunction()
+                            }
+                        }} />
                 </div>
+
             </section>
         </div>
     )

@@ -3,33 +3,48 @@ import { socket } from '../socket.ts';
 
 export interface IMessage { message: string }
 
+type IPlayersActiveInRoom = {
+    nick: string;
+    points: number
+}
+
 const socketContext = createContext<{
     messages: IMessage[],
     sendMessage: (message: string) => void,
     createRoom: (roomId: string) => void,
     enterRoom: (roomId: string) => void,
-    rooms: string[]
+    rooms: string[],
+    isConnected: boolean,
+    activeRoom: string;
+    playersActiveInRoom: IPlayersActiveInRoom[],
+    nickname: string;
 }>({
     messages: [],
     sendMessage: Function,
     rooms: [],
     createRoom: Function,
-    enterRoom: Function
+    enterRoom: Function,
+    isConnected: false,
+    activeRoom: '',
+    playersActiveInRoom: [],
+    nickname: ''
 })
 
 function SocketContextProvider({ children }: { children: React.ReactNode }) {
 
-    const [_isConnected, setIsConnected] = useState(socket.connected);
+    const [isConnected, setIsConnected] = useState(socket.connected);
     const [messages, setMessages] = useState<IMessage[]>([])
     const [rooms, setRooms] = useState<string[]>([])
     const [roomId, _setRoomId] = useState<string>('global-chat')
-
+    const [activeRoom, setActiveRoom] = useState<string>('')
+    const [playersActiveInRoom, setPlayersActiveInRoom] = useState<IPlayersActiveInRoom[]>([])
+    const [nickname, setNickname] = useState('')
     useEffect(() => {
         function onConnect() {
             console.log("conectado com o backend");
             socket.emit("enterRoom", roomId)
             socket.emit("createRoom", roomId)
-
+            setActiveRoom(roomId)
             setIsConnected(true);
         }
 
@@ -45,6 +60,24 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
         socket.on("newUserInRoom", (message) => {
             setMessages((prev) => [...prev, message])
         })
+        socket.on("updatePlayers", msg => {
+            //console.log(msg)
+            let msgOjb = Object.entries(msg)
+            // console.log(msgOjb);
+            let playersObj: any[] = []
+            msgOjb.forEach((obj: any) => {
+                console.log(obj);
+                playersObj.push(obj[1])
+            })
+            console.log(playersObj);
+            setPlayersActiveInRoom(playersObj)
+
+            // let players: IPlayersActiveInRoom[] = []
+            // players = msgOjb.map((player: IPlayersActiveInRoom, i: number) => {
+            //     return { nick: player.nick, points: player.points }
+            // })
+            // setPlayersActiveInRoom(players)
+        })
 
         socket.on('updateRooms', (msg) => {
             let msgOjb = Object.entries(msg)
@@ -53,7 +86,6 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
                 return String(room[0])
             })
             setRooms(rooms)
-            console.log(rooms)
         })
 
         return () => {
@@ -74,11 +106,13 @@ function SocketContextProvider({ children }: { children: React.ReactNode }) {
     }
 
     const enterRoom = (roomId: string) => {
+        setMessages([])
         socket.emit("enterRoom", roomId)
+        setActiveRoom(roomId)
     }
 
     return (
-        <socketContext.Provider value={{ messages, sendMessage, rooms, createRoom, enterRoom }}>
+        <socketContext.Provider value={{ nickname, playersActiveInRoom, activeRoom, messages, sendMessage, rooms, createRoom, enterRoom, isConnected }}>
             {children}
         </socketContext.Provider>
     )

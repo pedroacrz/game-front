@@ -1,48 +1,90 @@
 .chat {
     display: flex;
-    flex-direction: column;
-    height: 300px;
-    background-color: black;
-}
-
-.messages {
-    overflow-y: scroll;
-}
-
-.chatSection {
-    display: flex;
-    flex-direction: column;
-    height: 300px;
-}
-
-.message {
-    flex: 5;
-    background-color: black;
-}
-
-.inputAndButton {
+    flex: 2;
+    background-color: rgb(0, 0, 0);
+    padding: 5px;
     flex: 1;
-    background-color: black;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
+    padding: 15px;
+    border-radius: 15px;
+    flex-direction: column;
 
-.messages {
-    height: 100%;
-
-    ul {
-        padding-left: 5px;
+    span {
+        font-size: 13px;
+        margin-left: 10px;
     }
 
-    li {
-        margin-bottom: 10px;
+    h3 {
+        margin-top: 5px;
+        margin-left: 5px;
+        font-size: 18px;
     }
-}
 
-.inputMessage {
-    width: 80%;
-    height: 20px;
-    border: none;
-    border-radius: 5px;
+    .messages {
+        overflow-y: scroll;
+    }
+
+    .chatSection {
+        display: flex;
+        flex-direction: column;
+        height: 300px;
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgb(46, 46, 46);
+            /* color of the tracking area */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(110, 21, 21);
+            /* color of the scroll thumb */
+            border-radius: 20px;
+            /* roundness of the scroll thumb */
+            border: 3px solid rgb(119, 12, 190);
+            /* creates padding around scroll thumb */
+        }
+    }
+
+    .message {
+        flex: 5;
+        background-color: black;
+    }
+
+    .inputAndButton {
+        flex: 1;
+        background-color: black;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border-radius: 15px;
+    }
+
+    .messages {
+        height: 100%;
+        margin-top: 10px;
+
+        ul {
+            padding-left: 5px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    }
+
+    .inputMessage {
+        width: 90%;
+        height: 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(30, 30, 39);
+        margin-bottom: 5px;
+        margin-left: 5px;
+        padding: 5px;
+        color: white;
+        font-size: 13px;
+    }
+
 }
